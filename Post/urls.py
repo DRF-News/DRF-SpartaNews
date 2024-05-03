@@ -1,16 +1,16 @@
 from django.urls import path
 from .views import (
     PostListAPIView,
-    # PostDetailAPIView,
-    # PostCreateAPIView,
-    # PostFavoriteAPIView,
-    # PostBookmarkAPIView,
+    PostCreateAPIView,
+    PostDetailAPIView,
+    PostFavoriteAPIView,
+    PostBookmarkAPIView,
 )
 
 urlpatterns = [
     path('', PostListAPIView.as_view(), name='post-list'),
-    # path('create/', PostCreateAPIView.as_view(), name='post-create'),
-    # path('<int:pk>/', PostDetailAPIView.as_view(), name='post-detail'),
-    # path('<int:pk>/favorite/', PostFavoriteAPIView.as_view(), name='post-favorite'),
-    # path('<int:pk>/bookmark/', PostBookmarkAPIView.as_view(), name='post-bookmark'),
+    path('create/', PostCreateAPIView.as_view(), name='post-create'),
+    path('<int:id>/', PostDetailAPIView.as_view(), name='post-detail'),
+    path('<int:id>/favorite/', PostFavoriteAPIView.as_view(), name='post-favorite'),
+    path('<int:id>/bookmark/', PostBookmarkAPIView.as_view(), name='post-bookmark'),
 ]
