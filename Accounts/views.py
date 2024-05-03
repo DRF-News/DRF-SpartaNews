@@ -4,7 +4,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import UserRegisterSerializer
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserRegisterSerializer, UserUpdateSerialzer
 from .models import User
 
 @api_view(["POST"])
@@ -17,8 +18,15 @@ def register(request):
 
 
 class AccountMangement(APIView):
-    def post(self, request, user_id):
-        pass
+    permission_classes = [IsAuthenticated]
+    
+    def put(self, request, user_id):
+        user = get_object_or_404(User, pk=user_id)
+        serializer = UserUpdateSerialzer(instance=user, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_202_ACCEPTED)
+
 
     def delete(self, request, user_id):
         user = get_object_or_404(User, pk=user_id)

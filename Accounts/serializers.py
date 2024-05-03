@@ -19,3 +19,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password')
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class UserUpdateSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ['username', 'password']
