@@ -21,7 +21,7 @@ class AccountMangement(APIView):
         pass
 
     def delete(self, request, user_id):
-        user = get_object_or_404(pk=user_id)
+        user = get_object_or_404(User, pk=user_id)
         if check_password(request.data["password"], user.password):
             user.delete()
             return Response(data={"message":"회원탈퇴 성공"}, status=status.HTTP_202_ACCEPTED)
