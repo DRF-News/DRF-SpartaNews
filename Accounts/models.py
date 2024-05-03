@@ -30,8 +30,8 @@ class User(AbstractBaseUser):
             "unique": ("A user with that username already exists."),
         },
     )
-    email = models.EmailField(unique=True, blank=True)
-    intro = models.TextField(blank=True)
+    email = models.EmailField(unique=True, blank=True, null=True)
+    intro = models.TextField(blank=True, null=True)
     join_date = models.DateField(auto_now_add=True)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
