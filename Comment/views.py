@@ -32,3 +32,21 @@ class CommentRetrieveAPIView(generics.RetrieveAPIView):
     def get_queryset(self):
         post = get_object_or_404(Post, pk=self.kwargs['post_id'])
         return post.comments.all()
+
+
+# reply 달기
+class ReplyCreateAPIView(generics.CreateAPIView):
+    serializer_class = CommentSerializer
+
+    def create(self, request, post_id, comment_id):
+        # 부모 댓글을 가져오기
+        parent_comment = get_object_or_404(Comment, pk=comment_id)
+
+        # 해당하는 post를 가져옴. 없을 경우 404 에러를 반환
+        post = get_object_or_404(Post, pk=post_id)
+
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(post=post, parent_comment=parent_comment)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
