@@ -84,3 +84,19 @@ class ReplyCreateAPIView(generics.CreateAPIView):
             serializer.save(post=post, parent_comment=parent_comment)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Reply 목록 보여주기
+class ReplyListAPIView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs['post_id']
+        comment_id = self.kwargs['comment_id']
+        parent_comment = get_object_or_404(Comment, pk=comment_id)
+        return parent_comment.replies.all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
