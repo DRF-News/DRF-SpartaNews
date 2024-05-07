@@ -96,3 +96,23 @@ class ReplyListAPIView(generics.ListAPIView):
         parent_comment = get_object_or_404(Comment, pk=comment_id)
         return parent_comment.replies.all()
 
+
+# Reply 수정하기
+class ReplyUpdateAPIView(generics.UpdateAPIView):
+    serializer_class = CommentSerializer
+
+    # Comment 찾기
+    def get_object(self):
+        post_id = self.kwargs['post_id']
+        comment_id = self.kwargs['comment_id']
+        reply_id = self.kwargs['reply_id']
+        return get_object_or_404(Comment, post_id=post_id, parent_comment_id=comment_id, id=reply_id)
+
+    # PUT 요청 처리
+    def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
