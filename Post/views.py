@@ -4,6 +4,7 @@ from rest_framework import generics, status
 from .models import Post
 from .serializers import PostSerializer
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -13,6 +14,8 @@ class PostListAPIView(generics.ListAPIView):
 
 
 class PostCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
@@ -29,6 +32,8 @@ class PostDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
 
 class PostFavoriteAPIView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     lookup_field = 'id'
@@ -41,6 +46,8 @@ class PostFavoriteAPIView(generics.UpdateAPIView):
         return Response(serializer.data)
 
 class PostBookmarkAPIView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     lookup_field = 'id'

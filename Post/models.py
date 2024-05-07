@@ -7,7 +7,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     content = models.TextField()
-    points = models.IntegerField()
+    points = models.IntegerField(default=0, null=True)
     favorite = models.ManyToManyField(User, related_name='favorite')
     bookmark = models.ManyToManyField(User, related_name='bookmark')
 
