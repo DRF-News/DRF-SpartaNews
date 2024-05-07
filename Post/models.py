@@ -1,4 +1,5 @@
 from django.db import models
+from Accounts.models import User
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
@@ -6,9 +7,9 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     content = models.TextField()
-    points = models.IntegerField(default=0)
-    favorite = models.BooleanField(default=False)
-    bookmark = models.BooleanField(default=False)
+    points = models.IntegerField()
+    favorite = models.ManyToManyField(User, related_name='favorite')
+    bookmark = models.ManyToManyField(User, related_name='bookmark')
 
     def __str__(self):
         return self.title
