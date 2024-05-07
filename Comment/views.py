@@ -116,3 +116,21 @@ class ReplyUpdateAPIView(generics.UpdateAPIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Reply 삭제하기
+class ReplyDeleteAPIView(generics.DestroyAPIView):
+    serializer_class = CommentSerializer
+
+    # Comment 찾기
+    def get_object(self):
+        post_id = self.kwargs['post_id']
+        comment_id = self.kwargs['comment_id']
+        reply_id = self.kwargs['reply_id']
+        return get_object_or_404(Comment, post_id=post_id, parent_comment_id=comment_id, id=reply_id)
+
+    # DELETE 요청 처리
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
