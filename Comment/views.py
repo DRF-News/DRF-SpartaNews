@@ -45,6 +45,20 @@ class CommentUpdateAPIView(generics.UpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Comment 삭제하기
+class CommentDeleteAPIView(generics.DestroyAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        return post.comments.all()
+
+    def destroy(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 # Comment 보여주기 / 해당 게시물에 대한 모든 Comment 조회 가능
 class CommentRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = CommentSerializer
