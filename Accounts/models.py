@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser, BaseUserManager, UserManager
+from django.contrib.auth.models import AbstractUser, AbstractBaseUser, BaseUserManager, UserManager, PermissionsMixin
 from django.contrib.auth.hashers import make_password
 
 class CustomUserManager(BaseUserManager):
@@ -14,8 +14,19 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
 
-class User(AbstractBaseUser):
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
+
+        return self.create_user(username, password, **extra_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
     username_validator = UnicodeUsernameValidator()
 
@@ -29,6 +40,11 @@ class User(AbstractBaseUser):
         error_messages={
             "unique": ("A user with that username already exists."),
         },
+    )
+    is_staff = models.BooleanField(
+        ("staff status"),
+        default=False,
+        help_text=("Designates whether the user can log into this admin site."),
     )
     email = models.EmailField(unique=True, blank=True, null=True)
     intro = models.TextField(blank=True, null=True)

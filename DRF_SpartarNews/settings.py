@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'Accounts',
     'Post',
     'Comment',
-    'chatgpt',
 ]
 
 MIDDLEWARE = [
