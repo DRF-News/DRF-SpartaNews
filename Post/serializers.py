@@ -6,7 +6,7 @@ class PostSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = Post
-        fields = ['id', 'title', 'url', 'created_at', 'points', 'updated_at', 'content', 'favorite_count', 'bookmark']
+        fields = ['id', 'title', 'url', 'created_at', 'points', 'updated_at', 'content', 'favorite_count']
         
     def get_favorite_count(self, obj):
         return obj.favorite.count()
