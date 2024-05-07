@@ -25,6 +25,26 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# Comment 수정하기
+class CommentUpdateAPIView(generics.UpdateAPIView):
+    serializer_class = CommentSerializer
+
+    # Comment 찾기
+    def get_object(self):
+        post_id = self.kwargs['post_id']
+        return get_object_or_404(Comment, post_id=post_id)
+
+    # PUT 요청 처리
+    def put(self, request, *args, **kwargs):
+        post_id = self.kwargs['post_id']  # post_id 가져오기
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 # Comment 보여주기 / 해당 게시물에 대한 모든 Comment 조회 가능
 class CommentRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = CommentSerializer
