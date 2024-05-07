@@ -39,7 +39,7 @@ class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         self.perform_update(serializer)
         return Response(serializer.data)
 
-    def destroy(self, request, *args, **kwargs):
+    def destroy(self, request):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
