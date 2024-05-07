@@ -10,7 +10,7 @@ class Post(models.Model):
     content = models.TextField(blank=True)
     points = models.IntegerField(default=0, null=True)
     favorite = models.ManyToManyField(User, related_name='favorite')
-    bookmark = models.ManyToManyField(User, related_name='bookmark')
+    bookmarked_by = models.ManyToManyField(User, related_name='bookmarked_posts')
 
     def __str__(self):
         return self.title

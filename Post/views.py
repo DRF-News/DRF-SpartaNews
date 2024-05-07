@@ -1,5 +1,4 @@
-from django.shortcuts import render
-
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from .models import Post
 from .serializers import PostSerializer
@@ -48,12 +47,17 @@ class PostFavoriteAPIView(generics.UpdateAPIView):
     serializer_class = PostSerializer
     lookup_field = 'id'
 
-    def patch(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.points += 1
-        instance.save()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+    def post(self, request, id):
+        instance = get_object_or_404(Post, id=id)
+        user = request.user
+        if user in instance.favorite.all():
+            instance.favorite.remove(user)
+            instance.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            instance.favorite.add(user)
+            instance.save()
+            return Response(status=status.HTTP_201_CREATED)
 
 class PostBookmarkAPIView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
@@ -62,10 +66,16 @@ class PostBookmarkAPIView(generics.UpdateAPIView):
     serializer_class = PostSerializer
     lookup_field = 'id'
 
-    def patch(self, request, *args, **kwargs):
-        instance = self.get_object()
+    def post(self, request, id):
+        instance = get_object_or_404(Post, id=id)
         user = request.user
-        instance.bookmarked_by.add(user)
-        instance.save()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        if user in instance.bookmarked_by.all():
+            instance.bookmarked_by.remove(user)
+            instance.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            instance.bookmarked_by.add(user)
+            instance.save()
+            return Response(status=status.HTTP_201_CREATED)
+    
+        
