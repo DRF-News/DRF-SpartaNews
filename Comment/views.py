@@ -96,7 +96,3 @@ class ReplyListAPIView(generics.ListAPIView):
         parent_comment = get_object_or_404(Comment, pk=comment_id)
         return parent_comment.replies.all()
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
