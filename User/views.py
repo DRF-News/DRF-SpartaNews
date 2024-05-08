@@ -33,3 +33,13 @@ class BookmarkedPostsView(APIView):
         # 게시물 시리얼라이즈
         serializer = PostSerializer(bookmarked_posts, many=True)
         return Response(serializer.data)
+
+class BookmarkedCommentsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # 현재 사용자가 즐겨찾기한 댓글들을 가져옴
+        bookmarked_comments = request.user.bookmarked_comments.all()
+        # 댓글 시리얼라이즈
+        serializer = CommentSerializer(bookmarked_comments, many=True)
+        return Response(serializer.data)
