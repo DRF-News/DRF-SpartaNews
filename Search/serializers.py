@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post
+from Post.models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -8,17 +8,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = [
-            "id",
-            "title",
-            "username",
-            "url",
-            "created_at",
-            "points",
-            "updated_at",
-            "content",
-            "favorite_count",
-        ]
+        fields = "__all__"
 
     def get_username(self, obj):
         return obj.user.username
