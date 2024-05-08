@@ -42,7 +42,7 @@ class UserListAPIView(generics.ListAPIView):
 
         q = Q()
         if username:
-            q &= Q(user__username__icontains=username)
+            q &= Q(username__icontains=username)
         if email:
             q &= Q(email__icontains=email)
         if intro:
