@@ -1,12 +1,6 @@
 from django.urls import path
-from .views import favorite, BookmarkedPostsView
-
+from .views import Favorite, BookmarkedPostsView
 urlpatterns = [
-    path('liked/post/', favorite.as_view(), name='liked-posts'),
-    #     path('api/user/liked/comment/',
-    #          LikedCommentsView.as_view(), name='liked-comments'),
-    path('bookmark/news/',
-         BookmarkedPostsView.as_view(), name='bookmarked-posts'),
-    #     path('api/user/bookmark/comment/',
-    #          BookmarkedCommentsView.as_view(), name='bookmarked-comments'),
+    path('liked/post/', Favorite.as_view(), name='liked-posts'),
+    path('bookmark/news/', BookmarkedPostsView.as_view(), name='bookmarked-posts'),
 ]
