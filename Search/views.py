@@ -1,7 +1,9 @@
 from rest_framework import generics
 from django.db.models import Q
 from Post.models import Post
-from .serializers import PostSerializer
+from Accounts.models import User
+from Post.serializers import PostSerializer
+from User.serializers import UserDetailSerializer
 
 
 # class PostListAPIView(generics.ListAPIView):
@@ -27,3 +29,23 @@ class PostListAPIView(generics.ListAPIView):
             q &= Q(user__username__icontains=username)
 
         return Post.objects.filter(q)
+
+
+class UserListAPIView(generics.ListAPIView):
+    serializer_class = UserDetailSerializer
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+        username = query_params.get("username")
+        email = query_params.get("email")
+        intro = query_params.get("intro")
+
+        q = Q()
+        if username:
+            q &= Q(user__username__icontains=username)
+        if email:
+            q &= Q(email__icontains=email)
+        if intro:
+            q &= Q(intro__icontains=intro)
+
+        return User.objects.filter(q)
