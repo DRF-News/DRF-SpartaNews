@@ -21,4 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/accounts/', include('Accounts.urls')),
     path('api/user/', include('User.urls')),
+    path('api/post/', include('Post.urls')),
+    path('api/comment/', include('Comment.urls')),
+    path('api/chatgpt/', include('chatgpt.urls')),
 ]
