@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from Post.models import Post
@@ -7,9 +8,10 @@ from .models import Comment
 from .serializers import CommentSerializer
 
 
-# Comment 작성하기 / 작성 후 해당 게시글에 달린 댓글들 전부 조회회
+# Comment 작성하기 / 작성 후 해당 게시글에 달린 댓글들 전부 조회
 class CommentListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         post = get_object_or_404(Post, pk=self.kwargs['post_id'])
@@ -28,6 +30,7 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
 # Comment 수정하기
 class CommentUpdateAPIView(generics.UpdateAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
 
     # Comment 찾기
     def get_object(self):
@@ -48,6 +51,7 @@ class CommentUpdateAPIView(generics.UpdateAPIView):
 # Comment 삭제하기
 class CommentDeleteAPIView(generics.DestroyAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         post = get_object_or_404(Post, pk=self.kwargs['post_id'])
@@ -71,6 +75,7 @@ class CommentRetrieveAPIView(generics.RetrieveAPIView):
 # reply 달기
 class ReplyCreateAPIView(generics.CreateAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, post_id, comment_id):
         # 부모 댓글을 가져오기
@@ -100,6 +105,7 @@ class ReplyListAPIView(generics.ListAPIView):
 # Reply 수정하기
 class ReplyUpdateAPIView(generics.UpdateAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
 
     # Comment 찾기
     def get_object(self):
@@ -121,6 +127,7 @@ class ReplyUpdateAPIView(generics.UpdateAPIView):
 # Reply 삭제하기
 class ReplyDeleteAPIView(generics.DestroyAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
 
     # Comment 찾기
     def get_object(self):

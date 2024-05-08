@@ -24,4 +24,5 @@ urlpatterns = [
     path("api/post/", include("Post.urls")),
     path("api/comment/", include("Comment.urls")),
     path("api/user/", include("User.urls")),
+    path("api/chatgpt/", include("chatgpt.urls")),
 ]
