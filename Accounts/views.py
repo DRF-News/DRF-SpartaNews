@@ -12,7 +12,7 @@ from .models import User
 @api_view(["POST"])
 def register(request):
     serializer = UserRegisterSerializer(data=request.data)
-    if serializer.is_valid() and request.data["password"] == request.data["confirm_password"]:
+    if serializer.is_valid():
         serializer.save()
         return Response(data=serializer.data)
     return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -42,17 +42,17 @@ class AccountMangement(APIView):
 @permission_classes([IsAuthenticated])
 def change_password(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    serializer = ChangePasswordSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        old_password = request.data['old_password']
-        new_password = request.data['new_password']
-        confirm_password = request.data['confirm_password']
+    serializer = ChangePasswordSerializer(data=request.data, context={'request':request})
+    old_password = request.data['old_password']
+    new_password = request.data['new_password']
+    confirm_password = request.data['confirm_password']
 
-        if not check_password(old_password, user.password):
-            return Response(data={"message":"현재 비밀번호 불일치"}, status=status.HTTP_400_BAD_REQUEST)
-        elif new_password != confirm_password:
-            return Response(data={"message":"새 비밀번호와 비밀번호 확인 불일치"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            user.set_password(new_password)
-            user.save()
+    if not check_password(old_password, user.password):
+        return Response(data={"message":"현재 비밀번호 불일치"}, status=status.HTTP_400_BAD_REQUEST)
+    elif new_password != confirm_password:
+        return Response(data={"message":"새 비밀번호와 비밀번호 확인 불일치"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif serializer.is_valid(raise_exception=True):
+        user.set_password(new_password)
+        user.save()
     return Response(data={"message":"비밀번호 변경 성공"}, status=status.HTTP_200_OK)
