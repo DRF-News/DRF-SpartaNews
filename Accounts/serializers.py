@@ -44,10 +44,17 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     def validate(self, data):
         user = self.context['request'].user
-        password = data.get('new_password')
-        
-        if not password:
-            raise serializers.ValidationError("비밀번호를 입력해주세요.")
-        
-        validate_password(password, user)
+        old_password = data.pop('old_password', None)
+        new_password = data.get('new_password')
+        confirm_password = data.pop('confirm_password', None)
+
+        if not user.check_password(old_password):
+            raise serializers.ValidationError("현재 비밀번호가 일치하지 않습니다.")
+        if not new_password:
+            raise serializers.ValidationError("새 비밀번호를 입력해주세요.")
+        if new_password != confirm_password:
+            raise serializers.ValidationError("비밀번호가 서로 일치하지 않습니다.")
+        if user.check_password(new_password):
+            raise serializers.ValidationError("새 비밀번호가 현재 비밀번호와 같습니다.")
+        validate_password(new_password)
         return data
