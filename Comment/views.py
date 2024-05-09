@@ -21,7 +21,7 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
         post = get_object_or_404(Post, pk=self.kwargs['post_id'])
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(post=post)
+            serializer.save(post=post, author=request.user)  # 수정된 부분: 현재 로그인한 사용자로 설정
             queryset = self.get_queryset()
             return Response(self.serializer_class(queryset, many=True).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -35,7 +35,8 @@ class CommentUpdateAPIView(generics.UpdateAPIView):
     # Comment 찾기
     def get_object(self):
         post_id = self.kwargs['post_id']
-        return get_object_or_404(Comment, post_id=post_id)
+        comment_id = self.kwargs['comment_id']
+        return get_object_or_404(Comment, post_id=post_id, id=comment_id)
 
     # PUT 요청 처리
     def put(self, request, *args, **kwargs):
@@ -57,9 +58,14 @@ class CommentDeleteAPIView(generics.DestroyAPIView):
         post = get_object_or_404(Post, pk=self.kwargs['post_id'])
         return post.comments.all()
 
-    def destroy(self, request, *args, **kwargs):
+    def get_object(self):
         queryset = self.get_queryset()
-        queryset.delete()
+        comment_id = self.kwargs['comment_id']
+        return get_object_or_404(queryset, pk=comment_id)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
