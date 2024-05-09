@@ -38,7 +38,6 @@ DRF-SpartaNews는 DRF를 이용해서 만든 주요 뉴스와 정보를 제공�
 - **[회원가입, 로그인, 로그아웃](https://github.com/DRF-News/DRF-SpartaNews/blob/main/Accounts/views.py#L13)**
 - **[회원정보 변경](https://github.com/DRF-News/DRF-SpartaNews/blob/main/Accounts/views.py#L21)**
 - **[회원탈퇴](https://github.com/DRF-News/DRF-SpartaNews/blob/main/Accounts/views.py#L32)**
-- **[토큰 재발급](https://github.com/first-project-MessageBoard/project_MessageBoard/blob/master/templates/index.html#L81)**
   - [API 엔드포인트](https://github.com/DRF-News/DRF-SpartaNews/blob/main/Accounts/urls.py#L9)
 
  <br/>
